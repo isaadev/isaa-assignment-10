@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIP Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        .results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .result-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            width: 200px;
+        }
+        .result-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .result-item p {
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>CLIP Image and Text Search</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Query Type:</label>
+        <select name="query_type" required>
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+            <option value="hybrid">Hybrid</option>
+        </select><br><br>
+
+        <label>Text Query:</label>
+        <input type="text" name="text_query" placeholder="Enter your text query"><br><br>
+
+        <label>Image Query:</label>
+        <input type="file" name="image_query" accept="image/*"><br><br>
+
+        <label>Hybrid Weight (0 to 1):</label>
+        <input type="number" name="hybrid_weight" step="0.1" min="0" max="1" value="0.5"><br><br>
+
+        <label>Use PCA:</label>
+        <input type="checkbox" name="use_pca"><br><br>
+
+        <label>Number of Principal Components:</label>
+        <input type="number" name="k_principal_components" value="50" min="1"><br><br>
+
+        <button type="submit">Search</button>
+    </form>
+
+    {% if results %}
+        <h2>Search Results</h2>
+        <div class="results">
+            {% for result in results %}
+                <div class="result-item">
+                    <img src="{{ result.file_name }}" alt="Result Image">
+                    <p>Similarity: {{ result.similarity | round(3) }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No results to display. Submit a query above!</p>
+    {% endif %}
+</body>
+</html>
